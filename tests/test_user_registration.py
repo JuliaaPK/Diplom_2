@@ -1,5 +1,6 @@
 import allure
 
+from helpers import Helpers
 from stellar_burger_api import StellarBurgerApi
 
 
@@ -22,11 +23,9 @@ class TestUserRegistration:
     @allure.title('Проверка регистрации пользователя без пароля')
     @allure.description('Проверка регистрации пользователя без указания пароля ')
     def test_reg_user_without_password(self, random_user_data_for_registration):
-        user_data = {
-            "email": random_user_data_for_registration["email"],
-            "name": random_user_data_for_registration["name"]
-        }
-        response_registration = StellarBurgerApi.stellar_registration_user(user_data)
+        random_user_data_for_registration_copy = random_user_data_for_registration.copy()
+        del random_user_data_for_registration_copy["password"]
+        response_registration = StellarBurgerApi.stellar_registration_user(random_user_data_for_registration_copy)
 
         assert response_registration.status_code == 403 \
                and response_registration.json()['message'] == 'Email, password and name are required fields'
